@@ -1,3 +1,4 @@
+import 'package:crud/tasks.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -27,26 +28,47 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  List<String> tasks = [];
-  TextEditingController txt = TextEditingController();
+  List<String> tasks = ['task 1', 'task 2', 'task 3', 'task 4'];
+  late TextEditingController controller;
+  String task1 = '';
   void addTask() {
+    task1 = controller.text;
   }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(controller: txt),
-              ElevatedButton(onPressed: addTask, child: Text("Add Task"))
-
+              SizedBox(width: 500, child: TextField(controller: controller)),
+              ElevatedButton(onPressed: addTask, child: Text("Add Task")),
             ],
           ),
-        ]
-      )
+          Expanded(
+            child: ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                return MyTask(text: tasks[index]);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
