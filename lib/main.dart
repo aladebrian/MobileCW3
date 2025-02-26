@@ -27,14 +27,16 @@ class TaskListScreen extends StatefulWidget {
   State<TaskListScreen> createState() => _TaskListScreenState();
 }
 
-class _TaskListScreenState extends State<TaskListScreen> {
-  List<String> tasks = ['task 1', 'task 2', 'task 3', 'task 4'];
-  late TextEditingController controller;
-  String task1 = '';
-  void addTask() {
-    task1 = controller.text;
+class Tasks {
+  List<String> tasks = ['task 1', 'task 2', 'task 3', 'task 4', 'task 5', 'task 6', 'task 7', 'task 8'];
+  void addTask(text) {
+    tasks.add(text);
   }
-
+}
+class _TaskListScreenState extends State<TaskListScreen> {
+  late TextEditingController controller;
+  
+  void _removeTask() {}
   @override
   void initState() {
     super.initState();
