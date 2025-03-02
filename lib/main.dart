@@ -1,5 +1,6 @@
 import 'package:crud/tasks.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,16 +28,27 @@ class TaskListScreen extends StatefulWidget {
   State<TaskListScreen> createState() => _TaskListScreenState();
 }
 
-class Tasks {
-  List<String> tasks = ['task 1', 'task 2', 'task 3', 'task 4', 'task 5', 'task 6', 'task 7', 'task 8'];
-  void addTask(text) {
-    tasks.add(text);
-  }
-}
 class _TaskListScreenState extends State<TaskListScreen> {
   late TextEditingController controller;
-  
-  void _removeTask() {}
+  List<dynamic> tasks = [
+    ['task 1', false],
+    ['task 2', false],
+    ['task 3', false],
+    ['task 4', false],
+    ['task 5', false],
+  ];
+  void addTask() {
+    setState(() {
+      tasks.add([controller.text, false]);
+    });
+  }
+
+  void removeTask(index) {
+    setState(() {
+      tasks.removeAt(index);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -57,7 +69,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(width: 500, child: TextField(controller: controller)),
+              SizedBox(
+                width: 500,
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(border: OutlineInputBorder()),
+                ),
+              ),
               ElevatedButton(onPressed: addTask, child: Text("Add Task")),
             ],
           ),
@@ -65,7 +83,53 @@ class _TaskListScreenState extends State<TaskListScreen> {
             child: ListView.builder(
               itemCount: tasks.length,
               itemBuilder: (context, index) {
-                return MyTask(text: tasks[index]);
+                return Padding(
+                  padding: const EdgeInsets.all(9.0),
+                  child: Container(
+                    width: 400,
+                    height: 100,
+                    color: Colors.pink,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            tasks[index][0],
+                            style: TextStyle(
+                              decoration:
+                                  tasks[index][1]
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 0,
+                          height: 50,
+                          width: 75,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: tasks[index][1],
+                                activeColor: Colors.orangeAccent,
+                                onChanged: (newBool) {
+                                  setState(() {
+                                    tasks[index][1] = newBool;
+                                  });
+                                },
+                              ),
+                              IconButton(
+                                onPressed: () => removeTask(index),
+                                icon: Icon(Icons.close),
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
             ),
           ),
